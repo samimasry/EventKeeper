@@ -3,16 +3,17 @@ package com.example.eventkeeper;
 public class User {
 
     private String username, email, password;
-    private String[] name = new String[2];
-    private String[] address = new String[4];
+    private Fullname name ;
+    private Address address;
 
-    public User(String username, String email, String password, String[] name, String[] address) {
+    public User(String username, String email, String password, Fullname name, Address address) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
         this.address = address;
     }
+
 
     public String getUsername() {
         return username;
@@ -26,11 +27,11 @@ public class User {
         return password;
     }
 
-    public String[] getName() {
+    public Fullname getName() {
         return name;
     }
 
-    public String[] getAddress() {
+    public Address getAddress() {
         return address;
     }
 }

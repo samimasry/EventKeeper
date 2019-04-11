@@ -8,4 +8,6 @@ public interface JsonPlaceHolderApi {
 
     @POST("signup")
     Call<User> createUser(@Body User user);
+    @POST("signin")
+    Call<User> loginUser(@Body User user);
 }
