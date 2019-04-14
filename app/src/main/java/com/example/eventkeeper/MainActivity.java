@@ -3,6 +3,7 @@ package com.example.eventkeeper;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    public String userId;
     private EditText email, password;
     private Button login;
     private TextView userRegistration;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.etPassword);
         login = (Button) findViewById(R.id.btnLogin);
         userRegistration = (TextView) findViewById(R.id.tvRegister);
-        apiReturn = (TextView) findViewById(R.id.apiReturn);
+        apiReturn = (TextView) findViewById(R.id.tvapiReturn);
     }
 
     private void loginUser(){
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         //Address address  = new Address("1234 main st", "orlando","florida",12345);
 
 
-        User loginuser = new User( "login", email.getText().toString(),
+        User loginuser = new User( "0", "0","login", email.getText().toString(),
                 password.getText().toString(),
                 new Fullname("login", "login"),
                 new Address("1", "1","1","1") );
@@ -91,26 +92,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(!response.isSuccessful()){
-                    apiReturn.setText("cde " + response.code());
+                    //apiReturn.setText("cde " + response.code());
+                    //login failed
 
-                    //Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Invalid Email/Password combination", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //login successful
+
+                //
+                //startActivity();
+                //
                 User userResponse = response.body();
-                Toast.makeText(MainActivity.this, userResponse.toString(), Toast.LENGTH_LONG).show();
-                String content = "";
-                content += "code " + response.code() + "\n";
-//                content +="Username " + userResponse.getUsername() + "\n";
+                //String responseBodyString = response.string();
+                //Toast.makeText(MainActivity.this, userResponse.toString(), Toast.LENGTH_LONG).show();
+                //String content = "";
+                //content += "userId " +userResponse.getUserId()+ "\n";
+                //content += "token " + userResponse.getToken()+ "\n";
+                userId = userResponse.getUserId();
+                //startActivity(new Intent(MainActivity.this, AppMain.class));
+
+
 //                content +="Email " + userResponse.getEmail() + "\n";
 //                content +="Password " + userResponse.getPassword() + "\n\n";
-                apiReturn.setText(content);
+                //apiReturn.setText(content);
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
 
-                apiReturn.setText(t.getMessage());
+                //apiReturn.setText(t.getMessage());
 
             }
         });
