@@ -15,14 +15,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private EditText userName, userEmail, userPassword;
+    private EditText userName, userEmail, userPassword, userFname, userLname, userStreet,userCity,
+    userState,userZipCode;
     private Button regButton;
     private TextView userLogin;
     //remove below
-    private TextView apiReturn;
+    //private TextView apiReturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +56,30 @@ public class RegistrationActivity extends AppCompatActivity {
     }
     //attach xml view stuff to variables
     private void setupUIElements(){
+        userFname = (EditText) findViewById(R.id.etFirstName);
+        userLname = (EditText) findViewById(R.id.etLastName);
+        userStreet = (EditText) findViewById(R.id.etAddress);
+        userCity = (EditText) findViewById(R.id.etCity);
+        userState = (EditText) findViewById(R.id.etState);
+        userZipCode =(EditText) findViewById(R.id.etZipcode);
         userName = (EditText) findViewById(R.id.etUserName);
         userPassword = (EditText) findViewById(R.id.etUserPassword);
         userEmail = (EditText) findViewById(R.id.etUserEmail);
         regButton = (Button) findViewById(R.id.btnRegister);
         userLogin = (TextView) findViewById(R.id.tvUserLogin);
-        apiReturn= (TextView)findViewById(R.id.apiReturn);
+        //apiReturn= (TextView)findViewById(R.id.apiReturn);
+    }
+    public static boolean ValidEmail(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
     private Boolean validate(){
         Boolean result = false;
@@ -70,7 +91,12 @@ public class RegistrationActivity extends AppCompatActivity {
             //if not output error
             Toast.makeText(this, "Please Fill all the Fields", Toast.LENGTH_SHORT).show();
         }else{
-            result = true;
+            if(!ValidEmail(email) ){
+                Toast.makeText(this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                result = true;
+            }
         }
 
         return result;
@@ -94,17 +120,18 @@ public class RegistrationActivity extends AppCompatActivity {
 //        someAdress[2] = "florida";
 //        someAdress[3] = "12345";
 
-        Fullname fullname = new Fullname("john", "doe");
-        Address address  = new Address("1234 main st", "orlando","florida","12345");
+        Fullname fullname = new Fullname(userFname.getText().toString(), userLname.getText().toString());
+        Address address  = new Address(userStreet.getText().toString(), userCity.getText().toString(),userState.getText().toString(),userZipCode.getText().toString());
 
 
-        User user = new User(userName.getText().toString(), userEmail.getText().toString(), userPassword.getText().toString(), fullname, address);
+        User user = new User("0", "0",userName.getText().toString(), userEmail.getText().toString(), userPassword.getText().toString(), fullname, address);
         Call<User> call = jsonPlaceHolderApi.createUser(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(!response.isSuccessful()){
-                    apiReturn.setText("cde " + response.code());
+                    //apiReturn.setText("cde " + response.code());
+                    Toast.makeText(getApplicationContext(), "Email Already in use", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 User userResponse = response.body();
@@ -114,14 +141,14 @@ public class RegistrationActivity extends AppCompatActivity {
 //                content +="Username " + userResponse.getUsername() + "\n";
 //                content +="Email " + userResponse.getEmail() + "\n";
 //                content +="Password " + userResponse.getPassword() + "\n\n";
-                apiReturn.setText(content);
+                //apiReturn.setText(content);
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
 
-                apiReturn.setText(t.getMessage());
+                //apiReturn.setText(t.getMessage());
 
             }
         });
