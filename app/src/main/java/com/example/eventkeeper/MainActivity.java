@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 //content += "userId " +userResponse.getUserId()+ "\n";
                 //content += "token " + userResponse.getToken()+ "\n";
                 userId = userResponse.getUserId();
-                //startActivity(new Intent(MainActivity.this, AppMain.class));
-
 
 //                content +="Email " + userResponse.getEmail() + "\n";
 //                content +="Password " + userResponse.getPassword() + "\n\n";
